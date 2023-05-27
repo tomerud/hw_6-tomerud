@@ -9,7 +9,9 @@ public class A {
 	}
 
 	public void printA() {
+		System.out.println("B");
 		System.out.println("A1");
+		System.out.println(b.getIPlus());
 		System.out.println("A2");
 	}
 }

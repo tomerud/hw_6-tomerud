@@ -1,53 +1,62 @@
 package il.ac.tau.cs.sw1.hw6;
 
+import java.util.Arrays;
+
 public class Polynomial {
 	
 	/*
 	 * Creates the zero-polynomial with p(x) = 0 for all x.
+	
 	 */
-	public Polynomial()
-	{
-		
+	public double[] coeff;
+	public Polynomial() {
+		this.coeff = new double[]{0.0};
 	} 
 	/*
 	 * Creates a new polynomial with the given coefficients.
 	 */
-	public Polynomial(double[] coefficients) 
-	{
-		
+	public Polynomial(double[] coefficients) {
+		this.coeff = coefficients;
 	}
 	/*
 	 * Addes this polynomial to the given one
 	 *  and retruns the sum as a new polynomial.
 	 */
-	public Polynomial adds(Polynomial polynomial)
-	{
-		return polynomial;
-		
+	public Polynomial adds(Polynomial polynomial) {
+		int n = this.coeff.length;
+		int m = polynomial.coeff.length;
+		int M = Math.max(n, m);
+		double[] sumCoeff = Arrays.copyOf(this.coeff, M);
+		for(int i = 0; i < m; i++) {
+			sumCoeff[i] += polynomial.coeff[i];
+		}
+		return new Polynomial(sumCoeff);
 	}
 	/*
 	 * Multiplies a to this polynomial and returns 
 	 * the result as a new polynomial.
 	 */
-	public Polynomial multiply(double a)
-	{
-		return null;
-		
+	public Polynomial multiply(double a) {
+		int n = this.coeff.length;
+		double[] multyPolynomial = Arrays.copyOf(this.coeff, n);
+		for(int i = 0; i < n ; i++) {
+			multyPolynomial[i] *= a;
+		}
+		return new Polynomial(multyPolynomial);
 	}
 	/*
 	 * Returns the degree (the largest exponent) of this polynomial.
 	 */
-	public int getDegree()
-	{
-		return 0;
+	public int getDegree() {
+		int n = this.coeff.length;
+		return n-1;
 	}
 	/*
 	 * Returns the coefficient of the variable x 
 	 * with degree n in this polynomial.
 	 */
-	public double getCoefficient(int n)
-	{
-		return 0.0;
+	public double getCoefficient(int n) {
+		return this.coeff[n];
 	}
 	
 	/*
@@ -56,9 +65,13 @@ public class Polynomial {
 	 * If the degree of this polynomial < n, it means that that the coefficient of the variable x 
 	 * with degree n was 0, and now it will change to c. 
 	 */
-	public void setCoefficient(int n, double c)
-	{
-		
+	public void setCoefficient(int n, double c) {
+		int deg = this.getDegree();
+		if(deg < n) {
+			double[] coeff1 = Arrays.copyOf(coeff, n+1);
+			this.coeff = coeff1;
+		}
+		this.coeff[n] = c;
 	}
 	
 	/*
@@ -68,16 +81,28 @@ public class Polynomial {
 	 */
 	public Polynomial getFirstDerivation()
 	{
-		return this;
+		int deg = getDegree();
+		double[] coeff1 = new double[deg];
+		if(deg <= 0) {
+			return new Polynomial();}
+		for(int i = 0; i < coeff1.length; i++) {
+			coeff1[i] = (i+1) * coeff[i+1];}
+
+		return new Polynomial(coeff1);
 	}
 	
 	/*
 	 * given an assignment for the variable x,
 	 * compute the polynomial value
 	 */
-	public double computePolynomial(double x)
-	{
-		return 0.0;
+	public double computePolynomial(double x) {
+		int n = coeff.length;
+		double sum = 0;
+		for(int i = 0; i <n; i++ ) {
+			double calc = Math.pow(x, i);
+			sum += coeff[i] * calc;
+		}
+		return sum ;
 	}
 	
 	/*
@@ -88,14 +113,9 @@ public class Polynomial {
 	 */
 	public boolean isExtrema(double x)
 	{
-		return false;
+		Polynomial first = this.getFirstDerivation();
+		Polynomial second = first.getFirstDerivation();
+		return (first.computePolynomial(x) == 0 && second.computePolynomial(x)!=0);
 	}
-	
-	
-	
-	
-
-    
-    
 
 }
